@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    ".git",
+    ".vagrant",
+    ".vscode",
+    ".scannerwork",
+    "sonar",
+    "tests",
+    "node_modules",
+    "jest"
+  ]
+}

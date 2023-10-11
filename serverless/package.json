@@ -1,0 +1,33 @@
+{
+  "name": "mfa-sms-otp",
+  "version": "1.0.0",
+  "description": "serverless APIs",
+  "scripts": {
+    "postinstall": "npx npm-recursive-install --skip-root",
+    "slsdeploy": "npm run slsdeploy-dev",
+    "slsdeploy-dev": "loop 'npx serverless deploy -v --stage dev'",
+    "slsdeploy-stg": "loop 'npx serverless deploy -v --stage stg'",
+    "slsdeploy-prd": "loop 'npx serverless deploy -v --stage prd'",
+    "test": "jest",
+    "test-silent": "jest --silent --coverage",
+    "offline": "cd ./lambda && ./sls-offline.sh"
+  },
+  "author": "",
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/jest/setEnvVars.js"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "loop": "^3.3.6",
+    "recursive-install": "^1.4.0",
+    "serverless": "^2.67.0",
+    "serverless-prune-plugin": "^1.5.1",
+    "serverless-stack-termination-protection": "^1.0.4"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "otp-generator": "^4.0.1"
+  }
+}

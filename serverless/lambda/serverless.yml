@@ -1,0 +1,86 @@
+service: sms-otp
+projectDir: ../ # Boundary of a project in which service is configured. Influences file resolution
+frameworkVersion: '2'
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-stack-termination-protection
+
+package:
+  individually: true
+  # package to include or exclude during serverless deployment (reduce indivitual package size)
+  patterns: [
+      '!./**', # Exclude everything
+      './_lib/**', # Common Library
+    ]
+
+###### (START) Custom #########################################################################
+custom:
+  # myStage: ${opt:stage, self:provider.stage}
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 5
+
+###### (END) Custom #########################################################################
+
+###### (START) Provider #########################################################################
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  iam:
+    role:
+      name: sms-otp-app-role
+      statements:
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: '*'
+  stage: dev
+  tags:
+    Project-Code: sms-otp
+    Environment: ${sls:stage}
+  versionFunctions: true # If `false` then turn off function versioning (Do not keep previous version).
+  tracing: # For X-Ray
+    # apiGateway: true # Can only be true if API Gateway is inside a stack.
+    lambda: true # Optional, can be true (true equals 'Active'), 'Active' or 'PassThrough'
+  memorySize: 2048 # Default memory size (You can overwrite it in function level)
+  timeout: 30 # Default timeout in seconds (You can overwrite it in function level) Note: API Gateway current maximum is 30 seconds
+  apiGateway:
+    binaryMediaTypes:
+      - '/'
+  environment:
+    # Common Environment Variables
+    DynamoDB_TableName: otp_table # AWS DynamoDB Table Name
+
+###### (END) Provider #########################################################################
+
+# ############################################################################
+# ## (START) Functions
+functions:
+  generateOTP:
+    handler: ./generateOTP/generateOTP.handler
+    package:
+      patterns:
+        - ./generateOTP/**
+    description: Generate OTP and save into DB
+    reservedConcurrency: 100
+    # events:
+    #   - http:
+    #       path: /generateOTP/
+    #       method: post
+
+  validateOTP:
+    handler: ./validateOTP/validateOTP.handler
+    package:
+      patterns:
+        - ./validateOTP/**
+    description: Validate OTP from DB
+    reservedConcurrency: 100
+    # events:
+    #   - http:
+    #       path: /validateOTP
+    #       method: post
+# ## (END) Functions
+# ############################################################################
+

@@ -1,0 +1,18 @@
+(A) Generate OTP: 
+Good:
+serverless invoke local --function generateOTP --data '{"body": {"uuid": "ef9b08ff-cde3-4db1-aeb6-e00b820705c7","appID": "CS-DEMO-APP-002"}}'
+
+Invalid Schema:
+serverless invoke local --function generateOTP --data '{"body": {"uuid": "ef9b08ff-cde3-4db1-aeb6-e00b820705c7","xxxxx": "CS-DEMO-APP-002"}}'
+
+
+(B) Validate OTP: 
+
+Good: 
+serverless invoke local --function validateOTP --data '{"body": {"uuid": "ef9b08ff-cde3-4db1-aeb6-e00b820705c7","appID": "CS-DEMO-APP-002", "otp":"917160"}}'
+
+Wrong OTP:
+serverless invoke local --function validateOTP --data '{"body": {"uuid": "ef9b08ff-cde3-4db1-aeb6-e00b820705c7","appID": "CS-DEMO-APP-002", "otp":"000000"}}'
+
+Invalid Schema:
+serverless invoke local --function validateOTP --data '{"body": {"uuid": "ef9b08ff-cde3-4db1-aeb6-e00b820705c7","xxxx": "CS-DEMO-APP-002", "otp":"000000"}}'

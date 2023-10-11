@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "type": "string"
+    },
+    "appID": {
+      "type": "string"
+    },
+    "otp": {
+      "type": "string"
+    }
+  },
+  "required": ["uuid", "appID", "otp"]
+}
